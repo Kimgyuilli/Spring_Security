@@ -1,16 +1,30 @@
 package com.example.springJWT.config;
 
+import com.example.springJWT.jwt.LoginFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration // 설정 클래스임을 명시
 @EnableWebSecurity // Spring Security를 활성화
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    public final AuthenticationConfiguration authenticationConfiguration;
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+        // AuthenticationManager를 생성하여 반환
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -42,6 +56,11 @@ public class SecurityConfig {
                 .requestMatchers("/admin").hasRole("ADMIN")
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated());
+
+
+        // 4-1 custom filter
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
 
         // 5. 세션 정책 설정
         // JWT를 사용하는 경우 세션을 생성하지 않으므로 STATELESS로 설정
