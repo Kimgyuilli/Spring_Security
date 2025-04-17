@@ -1,5 +1,6 @@
 package com.example.springJWT.config;
 
+import com.example.springJWT.jwt.JWTUtill;
 import com.example.springJWT.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     public final AuthenticationConfiguration authenticationConfiguration;
+    public final JWTUtill jwtUtill;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
@@ -60,7 +62,7 @@ public class SecurityConfig {
 
         // 4-1 custom filter
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtill), UsernamePasswordAuthenticationFilter.class);
 
         // 5. 세션 정책 설정
         // JWT를 사용하는 경우 세션을 생성하지 않으므로 STATELESS로 설정

@@ -18,3 +18,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+# JWT ??
+jwt:
+  secret: asdfaweyeftyawsdfucxutyajwfdtyafsfdtyfaytwenbdgs5r  # ??? ??? ??? ? (Base64? ??? ??)
+  expiration: 3600000 # 1?? (??? ??)
+  refresh-expiration: 1209600000 # 2? (??? ??)
+  header: Authorization
+  prefix: Bearer
