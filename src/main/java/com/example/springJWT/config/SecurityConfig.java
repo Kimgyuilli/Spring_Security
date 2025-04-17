@@ -62,6 +62,7 @@ public class SecurityConfig {
 
 
         // 4-1 custom filter
+        // cors 설정도 필요하다면 추가(프론트랑 연결시)
         http
                 .addFilterBefore(new JWTFilter(jwtUtill), LoginFilter.class);
 
